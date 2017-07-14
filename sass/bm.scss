@@ -1,0 +1,32 @@
+$bm-width: 10px;
+
+.bmArea{
+    ul{
+        line-height: 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        clear: both;
+        li{
+            position: relative;
+            display: inline-block;
+            width: $bm-width;
+            height: $bm-width;
+            margin-left: -1px;
+            margin-top: -1px;
+            cursor: pointer;
+            &.selected{
+                background-color: #333;
+            }
+            &::before{
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: $bm-width - 2;
+                height: $bm-width - 2;
+                border: 1px solid #000;
+            }
+        }
+    }
+}

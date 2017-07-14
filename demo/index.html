@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>点阵图</title>
+    <link rel="stylesheet" href="../dist/css/bm.css">
+    <link rel="stylesheet" href="syntaxhighlighter_3.0.83/styles/shCoreDefault.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+    <div id="logo" class="bmArea"></div>
+    <div id="controlPanel">
+        <a href="javascript:;" class="open">打开控制面板</a>
+        <div class="panel">
+            <button id="demo_play">播放</button>
+            <textarea rows="12"></textarea>
+            <button id="demo_get">获取数据</button>
+            <button id="demo_set">复原数据</button>
+            <button id="demo_clear">清空数据</button>
+        </div>
+    </div>
+    <h1>BM.js 是一个可绘制位图（bitmap）的展示插件。</h1>
+    <div id="doc">
+        <h2>安装</h2>
+        <p>引入 css 文件</p>
+        <pre class="brush:html">
+            &lt;link rel="stylesheet" href="dist/css/bm.css">
+        </pre>
+        <p>引入 js 文件，注意别忘了加载 jQuery 库</p>
+        <pre class="brush:html">
+&lt;script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+&lt;script src="dist/js/bm.js" charset="utf-8"></script>
+        </pre>
+        <p>初始化位图画布</p>
+        <pre class="brush:javascript">
+$('#bmArea').bmInit();
+        </pre>
+        <h2>语法</h2>
+        <p>初始化</p>
+        <pre class="brush:javascript">
+$('#bmArea').bmInit();
+        </pre>
+        <p>也可以指定画布的宽高格数，默认为 20 行 50 列</p>
+        <pre class="brush:javascript">
+$('#bmArea').bmInit({
+    row: 20,
+    col: 50
+});
+        </pre>
+        <p>获取画布数据，会返回一串由 0 和 1 组成的字符串</p>
+        <pre class="brush:javascript">
+$('#bmArea').bmGet();
+        </pre>
+        <p>复原画布</p>
+        <pre class="brush:javascript">
+// dataStr 为画布数据
+$('#bmArea').bmSet(dataStr);
+        </pre>
+        <p>清空画布</p>
+        <pre class="brush:javascript">
+$('#bmArea').bmClear();
+        </pre>
+        <p>位图动画，由多个画布组成的一组动画</p>
+        <pre class="brush:javascript">
+// dataJSON 为 json 数据，callback 为动画执行完毕后触发
+$('#bmArea').bmPlay(dataJSON, callback);
+        </pre>
+        <p>动画数据 json 格式</p>
+        <pre class="brush:javascript">
+// data 为画布数据，duration 为持续时间
+[
+    {
+        "data": "000000",
+        "duration": 10
+    },
+    {
+        "data": "000000",
+        "duration": 10
+    },
+    {
+        "data": "000000",
+        "duration": 10
+    }
+]
+        </pre>
+        <p>链式调用</p>
+        <pre class="brush:javascript">
+$('#bmArea').bmInit({
+    row: 3,
+    col: 3
+}).bmSet('000111000');
+        </pre>
+    </div>
+    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="syntaxhighlighter_3.0.83/scripts/shCore.js" charset="utf-8"></script>
+    <script src="syntaxhighlighter_3.0.83/scripts/shBrushAll.js" charset="utf-8"></script>
+    <script src="../dist/js/bm.js" charset="utf-8"></script>
+    <script>
+        SyntaxHighlighter.all();
+        $(function(){
+            //初始化
+            $('#logo').bmInit();
+            //获取数据
+            $('#demo_get').click(function(event) {
+                $('textarea').val($('#logo').bmGet());
+            });
+            //复原数据
+            $('#demo_set').click(function(event) {
+                $('#logo').bmSet($('textarea').val());
+            });
+            //清空
+            $('#demo_clear').click(function(event) {
+                $('#logo').bmClear();
+            });
+            //播放动画
+            $('#demo_play').click(function(event) {
+                $.ajax({
+                    url: 'demo.json',
+                    dataType: 'JSON'
+                }).done(function(data){
+                    $('#logo').bmPlay(data);
+                });
+            });
+            $('#demo_play').click();
+            //打开控制面板
+            $('#controlPanel .open').click(function(event) {
+                $(this).hide();
+                $('#controlPanel .panel').show();
+            });
+        });
+    </script>
+</body>
+</html>
