@@ -6,14 +6,15 @@
     $.fn.bmInit = function(settings){
         var $this = this;
         settings = $.extend({}, defaultSettings, settings || {});
+        var html = '';
         for(var i = 0; i < settings.row; i++){
-            var html = '<ul>';
+            html += '<ul>';
             for(var j = 0; j < settings.col; j++){
                 html += '<li></li>';
             }
             html += '</ul>';
-            $this.append(html).data(settings);
         }
+        $this.addClass('bmArea').html(html).data(settings);
         $this.on('mousedown', 'li', function(event) {
             event.preventDefault();
             var isSelected = $(this).hasClass('selected');
