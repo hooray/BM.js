@@ -17,20 +17,22 @@
         $this.addClass('bmArea').html(html).data(settings);
         $this.on('mousedown', 'li', function(event) {
             event.preventDefault();
-            var isSelected = $(this).hasClass('selected');
-            if(isSelected){
-                $(this).removeClass('selected');
-            }else{
-                $(this).addClass('selected');
-            }
-            $this.on('mouseover', 'li', function(event) {
-                event.preventDefault();
+            if(!$this.data('readonly') && $this.data('status') != 'play'){
+                var isSelected = $(this).hasClass('selected');
                 if(isSelected){
                     $(this).removeClass('selected');
                 }else{
                     $(this).addClass('selected');
                 }
-            });
+                $this.on('mouseover', 'li', function(event) {
+                    event.preventDefault();
+                    if(isSelected){
+                        $(this).removeClass('selected');
+                    }else{
+                        $(this).addClass('selected');
+                    }
+                });
+            }
         }).on('mouseup', 'li', function(event) {
             $this.off('mouseover', 'li');
         });
@@ -48,34 +50,31 @@
         return data;
     };
     $.fn.bmSet = function(data){
-        var $this = this;
-        var settings = $this.data();
+        var settings = this.data();
         for(var i = 0; i < settings.col; i++){
             var d = data.substr(i * settings.row, settings.row).split('');
             for(var j = 0; j < d.length; j++){
                 if(d[j] == 1){
-                    $this.children('ul:eq('+j+')').children('li:eq('+i+')').addClass('selected');
+                    this.children('ul:eq('+j+')').children('li:eq('+i+')').addClass('selected');
                 }else{
-                    $this.children('ul:eq('+j+')').children('li:eq('+i+')').removeClass('selected');
+                    this.children('ul:eq('+j+')').children('li:eq('+i+')').removeClass('selected');
                 }
             }
         }
         return this;
     };
     $.fn.bmClear = function(){
-        var $this = this;
-        var settings = $this.data();
+        var settings = this.data();
         var data = '';
         for(var i = 0; i < settings.col; i++){
             for(var j = 0; j < settings.row; j++){
                 data += 0;
             }
         }
-        $this.bmSet(data);
+        this.bmSet(data);
         return this;
     };
     $.fn.bmPlay = function(data, callback){
-        var $this = this;
         function loop(bm, index, data, callback){
             if(data.length > 1){
                 if(index == 0){
@@ -85,7 +84,7 @@
                     setTimeout(function(){
                         if(index == data.length){
                             // bm.bmClear();
-                            $this.data('status', 'stop');
+                            bm.data('status', 'stop');
                             setTimeout(function(){
                                 callback && callback();
                             }, 0);
@@ -97,10 +96,14 @@
                 }
             }
         }
-        if($this.data('status') != 'play'){
-            $this.data('status', 'play');
-            loop($this, 0, data, callback);
+        if(this.data('status') != 'play'){
+            this.data('status', 'play');
+            loop(this, 0, data, callback);
         }
+        return this;
+    };
+    $.fn.bmReadonly = function(flag = true){
+        this.data('readonly', flag);
         return this;
     };
 })(jQuery);

@@ -55,7 +55,7 @@ $('#bmArea').bmInit({
         </pre>
         <p>获取画布数据，会返回一串由 0 和 1 组成的字符串</p>
         <pre class="brush:javascript">
-$('#bmArea').bmGet();
+var dataStr = $('#bmArea').bmGet();
         </pre>
         <p>复原画布</p>
         <pre class="brush:javascript">
@@ -65,6 +65,13 @@ $('#bmArea').bmSet(dataStr);
         <p>清空画布</p>
         <pre class="brush:javascript">
 $('#bmArea').bmClear();
+        </pre>
+        <p>画布只读</p>
+        <pre class="brush:javascript">
+//设为只读
+$('#bmArea').bmReadonly(true);
+//取消只读
+$('#bmArea').bmReadonly(false);
         </pre>
         <p>位图动画，由多个画布组成的一组动画</p>
         <pre class="brush:javascript">
